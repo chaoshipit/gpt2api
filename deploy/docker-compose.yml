@@ -81,9 +81,9 @@ services:
       - ${DNS_PRIMARY:-8.8.8.8}
       - ${DNS_FALLBACK:-1.1.1.1}
     volumes:
-      - ../configs:/app/configs:ro
+      - /home/chao/clawd/gpt2api/configs:/app/configs:ro
       - backups:/app/data/backups
-      - ./logs:/app/logs
+      - /home/chao/clawd/gpt2api/deploy/logs:/app/logs
     command: ["/app/gpt2api", "-c", "/app/configs/config.yaml"]
 
 volumes:
