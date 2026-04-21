@@ -594,9 +594,11 @@ func (c *Client) PollConversationForImages(ctx context.Context, convID string, o
 			}
 		}
 
-		// 分支 1:file-service 直出 = IMG2 终稿。
-		// 有 file-service 直出就算命中,把所有 tool 消息累计到的 fid/sid 都带出去。
-		if len(allFile) > 0 {
+		// 分支 1:任意图片引用首张即返。
+		// 旧逻辑只有 file-service 才算 IMG2,sediment 单条会在 30s 后被判成 preview_only 并触发重试。
+		// 现在上游已可一次性返回可用图,因此只要本轮拿到任意 file/sediment 引用就直接返回,
+		// 由上层按现有下载逻辑继续处理,避免无谓的二次生成。
+		if len(allFile) > 0 || len(allSed) > 0 {
 			return PollStatusIMG2, allFile, allSed
 		}
 
